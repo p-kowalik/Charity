@@ -23,6 +23,16 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPage.as_view(), name='landing-page'),
     path('add_donation/', AddDonation.as_view(), name='add-donation'),
-    path('login/', Login.as_view(), name='login'),
+#    path('login/', Login.as_view(), name='login'),
     path('register/', Register.as_view(), name='register'),
+
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
+    path('password_change/', auth_views.PasswordChangeView.as_view(), name='change-password'),
+    path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='change-password-done'),
+    path('password_reset/', auth_views.PasswordResetView.as_view(), name='password-reset'),
+    path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password-reset-done'),
+    path('reset/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password-reset-confirm'),
+    path('reset/done/', auth_views.PasswordResetCompleteView.as_view(), name='password-reset-complete'),
 ]
