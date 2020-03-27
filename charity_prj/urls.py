@@ -25,10 +25,11 @@ urlpatterns = [
     path('add_donation/', AddDonation.as_view(), name='add-donation'),
 #    path('login/', Login.as_view(), name='login'),
     path('register/', Register.as_view(), name='register'),
+    path('user_page/', UserPage.as_view(), name='user-page'),
 
     path('accounts/', include('django.contrib.auth.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='logout.html'), name='logout'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='index.html'), name='logout'),
     path('password_change/', auth_views.PasswordChangeView.as_view(), name='change-password'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='change-password-done'),
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password-reset'),

@@ -6,6 +6,9 @@ from django.core.validators import EmailValidator, URLValidator, MinValueValidat
 class Category(models.Model):
     name = models.CharField(max_length=64)
 
+    def __str__(self):
+        return self.name
+
 
 TYPES = (
     (1, 'fundacja'),
@@ -19,6 +22,9 @@ class Institution(models.Model):
     description = models.TextField()
     type = models.IntegerField(choices=TYPES, default=1)
     categories = models.ManyToManyField(Category)
+
+    def __str__(self):
+        return self.name
 
 
 class Donation(models.Model):
@@ -34,3 +40,5 @@ class Donation(models.Model):
     pick_up_comment = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str("Podarunek dla : ") + str(self.institution) + str(", z dnia : ") + str(self.pick_up_date)
