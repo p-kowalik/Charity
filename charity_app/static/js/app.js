@@ -223,7 +223,8 @@ document.addEventListener("DOMContentLoaded", function() {
     updateForm() {
       this.$step.innerText = this.currentStep;
       if (this.currentStep === 3){
-        console.log("step2")
+        console.log("step3");
+        displayValidInstitutions()
       }
 
       // TODO: Validation
@@ -267,7 +268,6 @@ document.addEventListener("DOMContentLoaded", function() {
 var category_list = [];
 function addValueToCategoryList(event) {
   category_list = [];
-
   var checkboxes = document.getElementsByName("categories");
   for (var i=0; i<checkboxes.length; i++) {
     var checkbox = checkboxes[i];
@@ -275,11 +275,40 @@ function addValueToCategoryList(event) {
       category_list.push(checkbox.dataset.id)
     }
   }
+}
 
-  /*var CategoryValue = checkboxes.value();
-  category_list.push(CategoryValue);
-  console.log(category_list);
-  var cat_id = category.dataset.id;
-  console.log(cat_id)*/
+function displayValidInstitutions() {
+  console.log("List of categories selected: ", category_list);
+  var institutions = document.getElementsByName("organization");
+  for (var i=0; i<institutions.length; i++) {
+    var institution = institutions[i];
+    var institution_categories = institution.dataset.instcat;
 
+    /*var institution_categories_split = institution_categories.split(' ');
+    console.log(institution_categories_split);
+    var institution_categories_array = Array(institution.dataset.instcat);
+    var institution_categories_object = Object(institution.dataset.instcat);*/
+    var institution_id = institution.dataset.instid;
+    console.log("Institution id: ", institution_id, "Institution categories:",  institution_categories);
+
+    /*console.log("Institution id: ", institution_id, "Institution categories array:",  institution_categories_array);
+    console.log("Institution id: ", institution_id, "Institution categories object:",  institution_categories_object);
+    console.log(institution_categories[i]);
+    console.log(Object.values(institution_categories));
+    console.log(Object.keys(institution_categories));
+    Object.values(institution_categories).forEach(([key]) => {
+   console.log(value);
+    Object.entries(institution_categories).forEach(([key, value]) => {
+   console.log(key, value);
+    });*/
+    /*for (var i=0; i<institution_categories.length; i++) {
+      var inst_category = institution_categories[i];
+      console.log("inst_category", inst_category);
+    }
+
+    if (institution.checked) {
+      console.log("Inst value: ", institution.value);
+    }*/
+
+  }
 }
