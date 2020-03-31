@@ -214,12 +214,17 @@ document.addEventListener("DOMContentLoaded", function() {
       this.$form.querySelector("form").addEventListener("submit", e => this.submit(e));
     }
 
+
+
     /**
      * Update form front-end
      * Show next or previous section etc.
      */
     updateForm() {
       this.$step.innerText = this.currentStep;
+      if (this.currentStep === 3){
+        console.log("step2")
+      }
 
       // TODO: Validation
 
@@ -252,4 +257,29 @@ document.addEventListener("DOMContentLoaded", function() {
   if (form !== null) {
     new FormSteps(form);
   }
+
+
+
+
+
 });
+
+var category_list = [];
+function addValueToCategoryList(event) {
+  category_list = [];
+
+  var checkboxes = document.getElementsByName("categories");
+  for (var i=0; i<checkboxes.length; i++) {
+    var checkbox = checkboxes[i];
+    if (checkbox.checked) {
+      category_list.push(checkbox.dataset.id)
+    }
+  }
+
+  /*var CategoryValue = checkboxes.value();
+  category_list.push(CategoryValue);
+  console.log(category_list);
+  var cat_id = category.dataset.id;
+  console.log(cat_id)*/
+
+}

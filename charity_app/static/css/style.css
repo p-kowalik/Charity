@@ -376,6 +376,8 @@ template {
   display: none;
 }
 
+
+
 /**
  * COLORS
  */
@@ -602,6 +604,10 @@ form .form-group--checkbox input {
   position: absolute;
   opacity: 0;
   display: none;
+}
+
+form .form-no-display {
+  visibility: hidden;
 }
 
 /* line 64, scss/modules/_forms.scss */

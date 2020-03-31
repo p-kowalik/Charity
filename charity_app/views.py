@@ -5,14 +5,14 @@ from django.contrib.auth import login, logout, authenticate
 from charity_app.forms import *
 from .models import *
 from django.contrib.auth.models import User
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from django.conf import settings
 from datetime import date, datetime, timedelta
 #from django.contrib.auth.mixins import PermissionRequiredMixin
-#from django.contrib.auth.mixins import LoginRequiredMixin
+
 from django.views.generic.edit import UpdateView
 #from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 #from django.core.exceptions import ObjectDoesNotExist
@@ -38,9 +38,14 @@ class LandingPage(View):
                                               "local_collections": local_collections})
 
 
-class AddDonation(View):
+class AddDonation(LoginRequiredMixin, View):
+    login_url = '/login/'
+
     def get(self, request):
-        return render(request, 'form.html')
+        categories = Category.objects.all()
+        institutions = Institution.objects.all()
+        return render(request, 'form.html', {"categories": categories,
+                                             "institutions": institutions})
 
 
 class Login(View):
