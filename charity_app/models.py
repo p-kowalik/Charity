@@ -10,6 +10,8 @@ class Category(models.Model):
         return self.name
 
 
+
+
 TYPES = (
     (1, 'fundacja'),
     (2, 'organizacja pozarządowa'),
@@ -25,6 +27,10 @@ class Institution(models.Model):
 
     def __str__(self):
         return self.name
+
+    @property
+    def category_ids(self):
+        return ','.join([str(category.id) for category in self.categories.all()])
 
 
 class Donation(models.Model):

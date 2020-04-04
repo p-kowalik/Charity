@@ -607,7 +607,7 @@ form .form-group--checkbox input {
 }
 
 form .form-no-display {
-  visibility: hidden;
+  display: none;
 }
 
 /* line 64, scss/modules/_forms.scss */

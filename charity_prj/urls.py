@@ -23,9 +23,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPage.as_view(), name='landing-page'),
     path('add_donation/', AddDonation.as_view(), name='add-donation'),
-#    path('login/', Login.as_view(), name='login'),
     path('register/', Register.as_view(), name='register'),
     path('user_page/', UserPage.as_view(), name='user-page'),
+    path('confirmation/', ConfirmationView.as_view(), name='form-confirmation'),
+    path('update/', UserDataUpdateView.as_view(), name='update-user-data'),
 
     path('accounts/', include('django.contrib.auth.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),

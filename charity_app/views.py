@@ -6,6 +6,9 @@ from charity_app.forms import *
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
+from datetime import datetime
+from django.core.serializers import serialize
+import json
 
 from django.http import HttpResponse
 from django.core.mail import send_mail
@@ -45,7 +48,42 @@ class AddDonation(LoginRequiredMixin, View):
         categories = Category.objects.all()
         institutions = Institution.objects.all()
         return render(request, 'form.html', {"categories": categories,
-                                             "institutions": institutions})
+                                             "institutions": institutions,
+                                             })
+
+    def post(self, request):
+        bags_count = request.POST.get("bags")
+        organization_id = request.POST.get("organization")
+        organization_object = Institution.objects.get(id=organization_id)
+        address = request.POST.get("address")
+        phone_number = request.POST.get("phone")
+        city = request.POST.get("city")
+        zip_code = request.POST.get("postcode")
+        pick_up_date = request.POST.get("data")
+        pick_up_time = request.POST.get("time")
+        pick_up_comment = request.POST.get("more_info")
+        username = request.user.get_username()
+        user_obj = User.objects.get(username=username)
+        user_id = user_obj.id
+
+        Donation.objects.create(quantity=int(bags_count),
+                                institution=Institution.objects.get(id=organization_id),
+                                address=address,
+                                phone_number=phone_number,
+                                city=city,
+                                zip_code=zip_code,
+                                pick_up_date=pick_up_date,
+                                pick_up_time=pick_up_time,
+                                pick_up_comment=pick_up_comment,
+                                user=User.objects.get(id=user_id))
+        return redirect('/confirmation/')
+
+
+class ConfirmationView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request):
+        return render(request, 'form-confirmation.html')
 
 
 class Login(View):
@@ -78,3 +116,9 @@ class UserPage(View):
         user_donations = Donation.objects.filter(user=user_id)
         return render(request, 'user_page.html', {'user_data': user_data,
                                                   'user_donations': user_donations})
+
+
+class UserDataUpdateView(View):
+    def get(self, request):
+        form = UserDataUpdateForm()
+        return render(request, 'user_data_update.html', {'form': form})

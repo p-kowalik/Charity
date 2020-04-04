@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block register %}
+{% block user_update %}
 
 <!DOCTYPE html>
 <html lang="pl">
@@ -8,43 +8,38 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Register</title>
+    <title>Update</title>
     <link rel="stylesheet" href="../static/css/style.css" />
 </head>
 
 <body>
 <section class="login-page">
-    <h2>Załóż konto</h2>
+    <h2>Edytuj swoje dane</h2>
+    <h3>Nazwa użytkownika {{ user.username }}</h3>
+    <h3>Imię {{ user.first_name }}</h3>
+    <h3>Nazwisko {{ user.last_name }}</h3>
 
-    <form method="post" action="{% url 'register' %}">
+    <form method="post" action="{% url 'update-user-data' %}">
         {% csrf_token %}
+        {{ form.as_p }}
         <div class="form-group">
-            {{ form.username}}
-            Nazwa użytkownika
+            {{ form.new_email}}
+            Nowy email
         </div>
         <div class="form-group">
-            {{ form.first_name}}
-            Imię
+            {{ form.old_password }}
+            Stare hasło
         </div>
         <div class="form-group">
-            {{ form.last_name}}
-            Nazwisko
+            {{ form.new_password }}
+            Nowe hasło
         </div>
         <div class="form-group">
-            {{ form.email}}
-            Email
-        </div>
-        <div class="form-group">
-            {{ form.password1 }}
-            Hasło
-        </div>
-        <div class="form-group">
-            {{ form.password2 }}
-            Powtórz hasło
+            {{ form.repeat_new_password }}
+            Powtórz nowe hasło
         </div>
         <div class="form-group form-group--buttons">
-            <a href="/login/" class="btn btn--without-border">Zaloguj się</a>
-            <button class="btn" type="submit">Załóż konto</button>
+            <button class="btn" type="submit">Potwierdź zmianę danych</button>
         </div>
     </form>
 </section>

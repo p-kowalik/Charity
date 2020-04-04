@@ -8,7 +8,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-  <title>Document</title>
+  <title>Donation</title>
   <link rel="stylesheet" href="../static/css/style.css" />
 </head>
 <body>
@@ -24,7 +24,7 @@
         Witaj {{ user.first_name }}
         <ul class="dropdown">
           <li><a href="/user_page/">Profil</a></li>
-          <li><a href="#">Ustawienia</a></li>
+          <li><a href="/update/">Ustawienia</a></li>
           {% if request.user.is_superuser %}
           <li><a href="/admin/">Admin</a></li>
           {% endif %}
@@ -89,7 +89,8 @@
   <div class="form--steps-container">
     <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
-    <form action="form-confirmation.html" method="post">
+    <form id="donationform" method="POST" action="{% url 'add-donation' %}" >
+      {% csrf_token %}
       <!-- STEP 1: class .active is switching steps -->
       <div data-step="1" class="active">
         <h3>Zaznacz co chcesz oddać:</h3>
@@ -97,7 +98,7 @@
         {% for category in categories %}
         <div class="form-group form-group--checkbox">
           <label>
-            <input type="checkbox" data-id="{{category.name}}" onchange="addValueToCategoryList(event)" name="categories" value="{{category.id}}"/>
+            <input type="checkbox" data-id="{{category.id}}" onchange="addValueToCategoryList(event)" name="categories" value="{{category.id}}"/>
             <span class="checkbox"></span>
             <span class="description"
             >{{category.name}}</span>
@@ -117,7 +118,7 @@
         <div class="form-group form-group--inline">
           <label>
             Liczba 60l worków:
-            <input type="number" name="bags" step="1" min="1" />
+            <input type="number" name="bags" id="bags" step="1" min="1" />
           </label>
         </div>
 
@@ -130,20 +131,20 @@
 
       <!-- STEP 3 -->
       <div data-step="3">
-        <h3>Wybierz organizacje, której chcesz pomóc:</h3>
+        <h3>Wybierz organizację, której chcesz pomóc:</h3>
 
         {% for institution in institutions %}
-        <div class="form-group form-group--checkbox form-no-display">
+        <div class="form-group form-group--checkbox step3">
           <label>
-            <input type="radio" name="organization" data-instid="{{institution.id}}" data-instcat="{{institution.categories.all}}" value="{{institution.id}}" />
+            <input type="radio" name="organization" data-instid="{{institution.id}}" data-instname="{{institution.name}}"
+                   data-instcat="{{institution.categories.all}}" value="{{institution.id}}"
+                   data-category-ids="{{institution.category_ids}}"/>
             <span class="checkbox radio"></span>
             <span class="description">
                   <div class="title">{{institution.name}}</div>
                   <div class="subtitle">
                     {{institution.description}}
-                    {% for instcat in institution.categories.all %}
-                      {{instcat}}
-                    {% endfor %}
+
                   </div>
                 </span>
           </label>
@@ -161,7 +162,7 @@
         <h3>Podaj adres oraz termin odbioru rzecz przez kuriera:</h3>
 
         <div class="form-section form-section--columns">
-          <div class="form-section--column">
+          <div id="address" class="form-section--column">
             <h4>Adres odbioru</h4>
             <div class="form-group form-group--inline">
               <label> Ulica <input type="text" name="address" /> </label>
@@ -184,7 +185,7 @@
             </div>
           </div>
 
-          <div class="form-section--column">
+          <div id="reception_date_input" class="form-section--column">
             <h4>Termin odbioru</h4>
             <div class="form-group form-group--inline">
               <label> Data <input type="date" name="data" /> </label>
@@ -197,7 +198,7 @@
             <div class="form-group form-group--inline">
               <label>
                 Uwagi dla kuriera
-                <textarea name="more_info" rows="5"></textarea>
+                <textarea name="more_info" id="more_info" rows="5"></textarea>
               </label>
             </div>
           </div>
@@ -216,39 +217,38 @@
           <div class="form-section">
             <h4>Oddajesz:</h4>
             <ul>
-              <li>
+              <li >
                 <span class="icon icon-bag"></span>
-                <span class="summary--text"
-                >4 worki ubrań w dobrym stanie dla dzieci</span
-                >
+                <span id="list_bags_amount" class="summary--text"
+                >4 worki ubrań w dobrym stanie dla dzieci</span><p>&nbsp worki z darami</p>
               </li>
 
               <li>
                 <span class="icon icon-hand"></span>
-                <span class="summary--text"
-                >Dla fundacji "Mam marzenie" w Warszawie</span
-                >
+                <p>Dla organizacji: &nbsp </p>
+                <span id="institution_name_summary" class="summary--text"
+                >Dla fundacji "Mam marzenie" w Warszawie</span>
               </li>
             </ul>
           </div>
 
           <div class="form-section form-section--columns">
-            <div class="form-section--column">
+            <div id="address_summary" class="form-section--column">
               <h4>Adres odbioru:</h4>
               <ul>
-                <li>Prosta 51</li>
+                <li id="list_address">Prosta 51</li>
                 <li>Warszawa</li>
                 <li>99-098</li>
                 <li>123 456 789</li>
               </ul>
             </div>
 
-            <div class="form-section--column">
+            <div id="reception_date_summary" class="form-section--column">
               <h4>Termin odbioru:</h4>
               <ul>
                 <li>13/12/2018</li>
                 <li>15:40</li>
-                <li>Brak uwag</li>
+                <li id="delivery_comment_summary">Brak uwag</li>
               </ul>
             </div>
           </div>
@@ -256,7 +256,7 @@
 
         <div class="form-group form-group--buttons">
           <button type="button" class="btn prev-step">Wstecz</button>
-          <button type="submit" class="btn">Potwierdzam</button>
+          <button type="submit" class="btn" onclick="document.getElementById('donationform').submit()">Potwierdzam</button>
         </div>
       </div>
     </form>

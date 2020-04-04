@@ -223,8 +223,11 @@ document.addEventListener("DOMContentLoaded", function() {
     updateForm() {
       this.$step.innerText = this.currentStep;
       if (this.currentStep === 3){
-        console.log("step3");
         displayValidInstitutions()
+
+      }
+      if (this.currentStep === 5){
+        passFormValues();
       }
 
       // TODO: Validation
@@ -258,13 +261,11 @@ document.addEventListener("DOMContentLoaded", function() {
   if (form !== null) {
     new FormSteps(form);
   }
-
-
-
-
-
 });
 
+
+
+/*generate list of donation categories selected*/
 var category_list = [];
 function addValueToCategoryList(event) {
   category_list = [];
@@ -277,38 +278,60 @@ function addValueToCategoryList(event) {
   }
 }
 
+/*display institutions accepting selected categories of donations*/
 function displayValidInstitutions() {
-  console.log("List of categories selected: ", category_list);
+  var institutions = document.getElementsByName("organization");
+  var institution_form = document.querySelectorAll(".form-group.form-group--checkbox.step3");
+  for (var i=0; i<institutions.length; i++) {
+    for (var k = 0; k < institution_form.length; k++) {
+      var form_item = institution_form[k];
+      form_item.classList.add("form-no-display");
+    }
+  }
+  for (var s=0; s<institutions.length; s++) {
+    var institution = institution_form[s];
+    var institution_categories = institution.querySelector("input").dataset.categoryIds.split(',');
+    for (var j=0; j<category_list.length; j++) {
+      var category_list_object = category_list[j];
+      if (institution_categories.includes(category_list_object)) {
+        institution.classList.remove("form-no-display")
+      }
+    }
+  }
+}
+
+/*pass values from form inputs to summary sheet*/
+function passFormValues() {
+  /*summary of bags to be donated (add categories description)*/
+  var bags_amount = document.getElementById("bags").value;
+  document.getElementById("list_bags_amount").innerHTML = bags_amount;
+
+  /*summary of foundation*/
   var institutions = document.getElementsByName("organization");
   for (var i=0; i<institutions.length; i++) {
-    var institution = institutions[i];
-    var institution_categories = institution.dataset.instcat;
-
-    /*var institution_categories_split = institution_categories.split(' ');
-    console.log(institution_categories_split);
-    var institution_categories_array = Array(institution.dataset.instcat);
-    var institution_categories_object = Object(institution.dataset.instcat);*/
-    var institution_id = institution.dataset.instid;
-    console.log("Institution id: ", institution_id, "Institution categories:",  institution_categories);
-
-    /*console.log("Institution id: ", institution_id, "Institution categories array:",  institution_categories_array);
-    console.log("Institution id: ", institution_id, "Institution categories object:",  institution_categories_object);
-    console.log(institution_categories[i]);
-    console.log(Object.values(institution_categories));
-    console.log(Object.keys(institution_categories));
-    Object.values(institution_categories).forEach(([key]) => {
-   console.log(value);
-    Object.entries(institution_categories).forEach(([key, value]) => {
-   console.log(key, value);
-    });*/
-    /*for (var i=0; i<institution_categories.length; i++) {
-      var inst_category = institution_categories[i];
-      console.log("inst_category", inst_category);
+    if (institutions[i].checked) {
+      var institution_name = institutions[i].dataset.instname;
+      document.getElementById("institution_name_summary").innerHTML = institution_name;
     }
-
-    if (institution.checked) {
-      console.log("Inst value: ", institution.value);
-    }*/
-
   }
+
+  /*summary of delivery address*/
+  var delivery_address_tag = document.getElementById("address");
+  var delivery_address_inputs = delivery_address_tag.getElementsByTagName('input');
+  var delivery_address_summary_tag = document.getElementById("address_summary");
+  var delivery_address_summary_list_element = delivery_address_summary_tag.getElementsByTagName('li');
+  for (var h=0; h<delivery_address_inputs.length; h++) {
+    delivery_address_summary_list_element[h].innerHTML = delivery_address_inputs[h].value;
+  }
+
+  /*summary of delivery date and comment for courier*/
+  var reception_date_tag = document.getElementById("reception_date_input");
+  var reception_date_inputs = reception_date_tag.getElementsByTagName('input');
+  var reception_date_summary_tag = document.getElementById("reception_date_summary");
+  var reception_date_summary_list_element = reception_date_summary_tag.getElementsByTagName('li');
+  for (var g=0; g<reception_date_inputs.length; g++) {
+    reception_date_summary_list_element[g].innerHTML = reception_date_inputs[g].value;
+  }
+  var delivery_comment = document.getElementById("more_info");
+  document.getElementById("delivery_comment_summary").innerHTML = delivery_comment.value;
 }
