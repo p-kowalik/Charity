@@ -13,7 +13,6 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
 from django.urls import path, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
@@ -23,15 +22,17 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', LandingPage.as_view(), name='landing-page'),
     path('add_donation/', AddDonation.as_view(), name='add-donation'),
+    path('update_donation/<int:id>/', DonationListUpdate.as_view(), name='update-donation'),
     path('register/', Register.as_view(), name='register'),
     path('user_page/', UserPage.as_view(), name='user-page'),
     path('confirmation/', ConfirmationView.as_view(), name='form-confirmation'),
     path('update/', UserDataUpdateView.as_view(), name='update-user-data'),
+    path('change_email/', EmailChange.as_view(), name='change-email'),
 
     path('accounts/', include('django.contrib.auth.urls')),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='index.html'), name='logout'),
-    path('password_change/', auth_views.PasswordChangeView.as_view(), name='change-password'),
+    path('password_change/', auth_views.PasswordChangeView.as_view(template_name='change_password.html'), name='change-password'),
     path('password_change/done/', auth_views.PasswordChangeDoneView.as_view(), name='change-password-done'),
     path('password_reset/', auth_views.PasswordResetView.as_view(), name='password-reset'),
     path('password_reset/done/', auth_views.PasswordResetDoneView.as_view(), name='password-reset-done'),

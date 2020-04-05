@@ -305,6 +305,10 @@ function passFormValues() {
   /*summary of bags to be donated (add categories description)*/
   var bags_amount = document.getElementById("bags").value;
   document.getElementById("list_bags_amount").innerHTML = bags_amount;
+  if (bags_amount == "" || bags_amount == null) {
+    alert("Nie podałeś ilości worków z darami");
+    return false;
+  }
 
   /*summary of foundation*/
   var institutions = document.getElementsByName("organization");
@@ -313,15 +317,25 @@ function passFormValues() {
       var institution_name = institutions[i].dataset.instname;
       document.getElementById("institution_name_summary").innerHTML = institution_name;
     }
+
   }
+/*            if (institution_name == "" || institution_name == null) {
+    alert("Nie wybrałeś instytucji");
+    return false;
+  }*/
 
   /*summary of delivery address*/
   var delivery_address_tag = document.getElementById("address");
   var delivery_address_inputs = delivery_address_tag.getElementsByTagName('input');
+/*                  if (delivery_address_inputs == "" || delivery_address_inputs == null) {
+    alert("Uzupełnij adres");
+    return false;
+  }*/
   var delivery_address_summary_tag = document.getElementById("address_summary");
   var delivery_address_summary_list_element = delivery_address_summary_tag.getElementsByTagName('li');
   for (var h=0; h<delivery_address_inputs.length; h++) {
     delivery_address_summary_list_element[h].innerHTML = delivery_address_inputs[h].value;
+
   }
 
   /*summary of delivery date and comment for courier*/
@@ -335,3 +349,4 @@ function passFormValues() {
   var delivery_comment = document.getElementById("more_info");
   document.getElementById("delivery_comment_summary").innerHTML = delivery_comment.value;
 }
+

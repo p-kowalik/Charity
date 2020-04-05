@@ -10,8 +10,6 @@ class Category(models.Model):
         return self.name
 
 
-
-
 TYPES = (
     (1, 'fundacja'),
     (2, 'organizacja pozarządowa'),
@@ -45,6 +43,7 @@ class Donation(models.Model):
     pick_up_time = models.TimeField()
     pick_up_comment = models.TextField()
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_taken = models.BooleanField(default=False)
 
     def __str__(self):
         return str("Podarunek dla : ") + str(self.institution) + str(", z dnia : ") + str(self.pick_up_date)

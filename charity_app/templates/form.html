@@ -11,6 +11,7 @@
   <title>Donation</title>
   <link rel="stylesheet" href="../static/css/style.css" />
 </head>
+
 <body>
 
 <header class="header--form-page">
@@ -32,8 +33,8 @@
         </ul>
       </li>
       {% endif %}
-    </ul>
 
+    </ul>
 
   </nav>
 
@@ -89,7 +90,7 @@
   <div class="form--steps-container">
     <div class="form--steps-counter">Krok <span>1</span>/5</div>
 
-    <form id="donationform" method="POST" action="{% url 'add-donation' %}" >
+    <form id="donationform" name="donationform" method="POST" action="{% url 'add-donation' %}" >
       {% csrf_token %}
       <!-- STEP 1: class .active is switching steps -->
       <div data-step="1" class="active">
@@ -256,7 +257,8 @@
 
         <div class="form-group form-group--buttons">
           <button type="button" class="btn prev-step">Wstecz</button>
-          <button type="submit" class="btn" onclick="document.getElementById('donationform').submit()">Potwierdzam</button>
+          <button id="formsubmit" type="submit" class="btn" onclick="document.getElementById('donationform').submit()"
+          >Potwierdzam</button>
         </div>
       </div>
     </form>

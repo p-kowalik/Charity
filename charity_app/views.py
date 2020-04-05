@@ -6,25 +6,7 @@ from charity_app.forms import *
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
-from datetime import datetime
-from django.core.serializers import serialize
-import json
-
-from django.http import HttpResponse
-from django.core.mail import send_mail
-from django.conf import settings
-from datetime import date, datetime, timedelta
-#from django.contrib.auth.mixins import PermissionRequiredMixin
-
-from django.views.generic.edit import UpdateView
-#from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-#from django.core.exceptions import ObjectDoesNotExist
-#from django.core.mail import EmailMessage
-from django import forms
-#from django.core.exceptions import ValidationError
-#from django.core.validators import EmailValidator, URLValidator
-from django.forms import ModelForm
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
 
 
 class LandingPage(View):
@@ -108,7 +90,9 @@ class Register(View):
         return render(request, 'register.html', {'form': form})
 
 
-class UserPage(View):
+class UserPage(LoginRequiredMixin, View):
+    login_url = '/login/'
+
     def get(self, request):
         logged_user = request.user.get_username()
         user_data = User.objects.get(username=logged_user)
@@ -118,7 +102,44 @@ class UserPage(View):
                                                   'user_donations': user_donations})
 
 
-class UserDataUpdateView(View):
+class UserDataUpdateView(LoginRequiredMixin, View):
+    login_url = '/login/'
+
     def get(self, request):
         form = UserDataUpdateForm()
         return render(request, 'user_data_update.html', {'form': form})
+
+
+class EmailChange(LoginRequiredMixin, View):
+    login_url = '/login/'
+
+    def get(self, request):
+        form = EmailChangeForm()
+        return render(request, 'change_email.html', {'form': form})
+
+    def post(self, request):
+        form = EmailChangeForm(request.POST)
+        logged_user = request.user.get_username()
+        user = User.objects.get(username=logged_user)
+        if form.is_valid():
+            updated_email = form.cleaned_data['new_email']
+            user.email = updated_email
+            user.save()
+            messages.success(request, 'Zmieniono email!')
+            return redirect('update-user-data')
+        else:
+            messages.error(request, 'Popraw wprowadzone dane.')
+
+
+class DonationListUpdate(View):
+    def get(self, request, id):
+        donation = Donation.objects.get(id=id)
+        if not donation.is_taken:
+            donation.is_taken = True
+            donation.save()
+        else:
+            donation.is_taken = False
+            donation.save()
+        return redirect('user-page')
+
+
