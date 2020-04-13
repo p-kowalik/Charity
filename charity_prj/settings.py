@@ -10,7 +10,24 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
+
 import os
+
+import environ
+
+env = environ.Env()
+
+# reading .env file
+env.read_env(env.str('./', '.env'))
+
+# https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
+#SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = '6nnt(3*tt$6vopxki#*^3h6epnv=m6yljifiz9325llw1nq&(2'
+#import environ
+
+#root = environ.Path(__file__) - 3  # get root of the project
+#env = environ.Env()
+#environ.Env.read_env()  # reading .env file
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,10 +37,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6nnt(3*tt$6vopxki#*^3h6epnv=m6yljifiz9325llw1nq&(2'
+#SECRET_KEY = env('SECRET_KEY')
+#SECRET_KEY = os.environ['SECRET_KEY']
+#SECRET_KEY = env.str('SECRET_KEY')
+#SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+#DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = []
 

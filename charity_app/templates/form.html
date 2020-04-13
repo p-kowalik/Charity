@@ -16,27 +16,7 @@
 
 <header class="header--form-page">
 
-  <nav class="container container--70">
 
-    <ul class="nav--actions">
-
-      {% if user.is_authenticated %}
-      <li class="logged-user">
-        Witaj {{ user.first_name }}
-        <ul class="dropdown">
-          <li><a href="/user_page/">Profil</a></li>
-          <li><a href="/update/">Ustawienia</a></li>
-          {% if request.user.is_superuser %}
-          <li><a href="/admin/">Admin</a></li>
-          {% endif %}
-          <li><a href="/logout/">Wyloguj</a></li>
-        </ul>
-      </li>
-      {% endif %}
-
-    </ul>
-
-  </nav>
 
   <div class="slogan container container--90">
 

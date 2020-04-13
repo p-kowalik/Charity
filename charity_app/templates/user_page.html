@@ -15,45 +15,12 @@
 <body>
 <header class="header--form-page">
 
-  <nav class="container container--70">
-
-    <ul class="nav--actions">
-
-      {% if user.is_authenticated %}
-      <li class="logged-user">
-        Witaj {{ user.first_name }}
-        <ul class="dropdown">
-          <li><a href="/user_page/">Profil</a></li>
-          <li><a href="/update/">Ustawienia</a></li>
-          {% if request.user.is_superuser %}
-          <li><a href="/admin/">Admin</a></li>
-          {% endif %}
-          <li><a href="/logout/">Wyloguj</a></li>
-        </ul>
-      </li>
-      {% endif %}
-
-    </ul>
-
-  </nav>
-
-
 <section class="login-page">
   <h2>Dane użytkownika</h2>
-  <h3><table  border="1">
-    <tr>
-      <td >Imię: </td>
-      <td>{{ user_data.first_name }}</td>
-    </tr>
-    <tr>
-      <td>Nazwisko: </td>
-      <td>{{ user_data.last_name }}</td>
-    </tr>
-    <tr>
-      <td>Email: </td>
-      <td>{{ user_data.email }}</td>
-    </tr>
-  </table></h3>
+      <h3>Nazwa użytkownika: {{ user.username }}</h3>
+    <h3>Imię: {{ user.first_name }}</h3>
+    <h3>Nazwisko: {{ user.last_name }}</h3>
+    <h3>Email: {{ user.email }}</h3>
 
   <h2>Lista darów podarowanych przez {{ user_data.first_name }}</h2>
   <h3><table  border="1">
