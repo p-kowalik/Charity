@@ -12,22 +12,17 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 
 import os
-
 import environ
 
-env = environ.Env()
+env = environ.Env(
+    DEBUG=(bool, False)
+                  )
 
 # reading .env file
-env.read_env(env.str('./', '.env'))
+environ.Env.read_env()
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
-#SECRET_KEY = env('SECRET_KEY')
-SECRET_KEY = '6nnt(3*tt$6vopxki#*^3h6epnv=m6yljifiz9325llw1nq&(2'
-#import environ
-
-#root = environ.Path(__file__) - 3  # get root of the project
-#env = environ.Env()
-#environ.Env.read_env()  # reading .env file
+SECRET_KEY = env('SECRET_KEY')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -43,8 +38,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-#DEBUG = env.bool('DEBUG', default=False)
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -98,10 +92,10 @@ WSGI_APPLICATION = 'charity_prj.wsgi.application'
 DATABASES = {
     'default': {
         'HOST': '127.0.0.1',
-        'NAME': 'charity_donation_db',
+        'NAME': env('NAME'),
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'USER': 'postgres',
-        'PASSWORD': 'coderslab',
+        'PASSWORD': env('PASSWORD'),
     }
 }
 
